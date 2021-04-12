@@ -1,4 +1,6 @@
-﻿using System.Collections;
+﻿//该脚本可以复制粘贴对象拥有的所有组件
+//在打包应用的时候应当注释掉该脚本，不然引起报错
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
