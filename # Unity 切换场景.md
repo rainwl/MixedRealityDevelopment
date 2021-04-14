@@ -1,5 +1,6 @@
 # Unity 常用代码
-[TOPC]
+[top]
+
 ## 切换场景
 ```csharp
 UnityEngine.SceneManagement;
@@ -64,3 +65,74 @@ public class ChangeLightingTexture : MonoBehaviour
 
 ```
 写好这个脚本后，在`Assets`文件夹虾面新建一个文件夹`Resources`，在`Resources`下再建一个`MaterialTexture`文件夹，里面存入需要更改的贴图文件，依次命名为`texture1`,`texture2`,,,`etc`。然后新建一个材质球，赋给一个物体，材质球里`_MainTex`用前面提到的一个贴图就可以。然后给一个`button`挂代码，执行`Change（）`方法
+
+## 动态修改材质球
+
+需要改变材质球的对象挂上脚本`ColorChanger`
+```csharp
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
+
+using UnityEngine;
+
+namespace Microsoft.MixedReality.Toolkit.Examples.Demos
+{
+    /// <summary>
+    /// Change the color of the material on a renderer.  Useful for visualizing button presses.
+    /// </summary>
+    [AddComponentMenu("Scripts/MRTK/Examples/ColorChanger")]
+    public class ColorChanger : MonoBehaviour
+    {
+        public MeshRenderer rend;
+        public Material[] mats;
+        public int cur;
+
+        private void Start()
+        {
+            if (rend == null)
+            {
+                rend = GetComponent<MeshRenderer>();
+            }
+        }
+
+        /// <summary>
+        /// Increments to the next material in the input list of materials and applies it to the renderer.
+        /// </summary>
+        public void Increment()
+        {
+            if (mats != null && mats.Length > 0)
+            {
+                cur = (cur + 1) % mats.Length;
+                if (rend != null)
+                {
+                    rend.material = mats[cur];
+                }
+            }
+        }
+        
+        /// <summary>
+        /// Decrements to the previous material in the input list of materials and applies it to the renderer.
+        /// </summary>
+        public void Decrement()
+        {
+            if (mats != null && mats.Length > 0)
+            {
+                cur = (cur - 1 + mats.Length) % mats.Length;
+                if (rend != null)
+                {
+                    rend.material = mats[cur];
+                }
+            }
+        }
+
+        /// <summary>
+        /// Sets a random color on the renderer's material.
+        /// </summary>
+        public void RandomColor()
+        {
+            rend.material.color = UnityEngine.Random.ColorHSV();
+        }
+    }
+}
+```
+然后给`button`添加事件，调用`colorchanger`的`Increment`，就按着顺序改变材质了
